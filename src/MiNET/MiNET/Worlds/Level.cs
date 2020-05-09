@@ -1130,7 +1130,18 @@ namespace MiNET.Worlds
 		public ChunkColumn GetChunk(ChunkCoordinates chunkCoordinates, bool cacheOnly = false)
 		{
 			var chunk = WorldProvider.GenerateChunkColumn(chunkCoordinates, cacheOnly);
-			if (chunk == null) Log.Error($"Got <null> chunk at {chunkCoordinates}");
+			if (chunk == null)
+			{
+				StackTrace stackTrace = new StackTrace();
+
+// Get calling method name
+				Console.WriteLine("CALLED FROM >>>>"+stackTrace.GetFrame(1).GetMethod().Name);
+				Log.Error($"Got <null> chunk at {chunkCoordinates} BOOL {cacheOnly}");
+				// MiNetServer.FastThreadPool.QueueUserWorkItem(() =>
+				// {
+				// 	WorldProvider.GenerateChunkColumn(chunkCoordinates);
+				// });
+			}
 			return chunk;
 		}
 

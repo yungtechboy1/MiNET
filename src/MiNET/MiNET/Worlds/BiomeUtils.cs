@@ -733,7 +733,9 @@ namespace MiNET.Worlds
 			//if(mesaGrass != desertGrass) throw new Exception("Mesa: " + mesaGrass + " Desert: " + desertGrass);
 		}
 
+		
 		private const int FOREST_BIOME = 4;
+		private const int MUSHROOM_ISLAND = 14;
 		private const int SWAMPLAND_BIOME = 6;
 		private const int FOREST_HILLS_BIOME = 18;
 		private const int BIRCH_FOREST_BIOME = 27;

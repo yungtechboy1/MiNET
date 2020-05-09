@@ -848,6 +848,8 @@ namespace MiNET
 			// Do nothing
 		}
 
+		private int aaaa = 0;
+
 		public void Start(object o)
 		{
 			Stopwatch watch = new Stopwatch();
@@ -878,13 +880,15 @@ namespace MiNET
 
 				SpawnPosition = (PlayerLocation) (SpawnPosition ?? Level.SpawnPoint).Clone();
 				KnownPosition = (PlayerLocation) SpawnPosition.Clone();
-
+Log.Info("GOINGGGGG "+aaaa++);
 				// Check if the user already exist, that case bumpt the old one
 				Level.RemoveDuplicatePlayers(Username, ClientId);
 
 				Level.EntityManager.AddEntity(this);
+				Log.Info("GOINGGGGG "+aaaa++);
 
 				GameMode = Config.GetProperty("Player.GameMode", Level.GameMode);
+				Log.Info("GOINGGGGG "+aaaa++);
 
 				//
 				// Start game - spawn sequence starts here
@@ -893,6 +897,7 @@ namespace MiNET
 				// Vanilla 1st player list here
 
 				//Level.AddPlayer(this, false);
+				Log.Info("GOINGGGGG "+aaaa++);
 
 				SendSetTime();
 
@@ -901,12 +906,14 @@ namespace MiNET
 				SendAvailableEntityIdentifiers();
 
 				SendBiomeDefinitionList();
+				Log.Info("GOINGGGGG "+aaaa++);
 
 				BroadcastSetEntityData();
 
 				if (ChunkRadius == -1) ChunkRadius = 5;
 
 				SendChunkRadiusUpdate();
+				Log.Info("GOINGGGGG "+aaaa++);
 
 				//SendSetSpawnPosition();
 
@@ -919,6 +926,7 @@ namespace MiNET
 				SendAdventureSettings();
 
 				SendGameRules();
+				Log.Info("GOINGGGGG "+aaaa++);
 
 				// Vanilla 2nd player list here
 
@@ -929,12 +937,14 @@ namespace MiNET
 				SendPlayerInventory();
 
 				SendCreativeInventory();
+				Log.Info("GOINGGGGG "+aaaa++);
 
 				SendCraftingRecipes();
 
 				SendAvailableCommands(); // Don't send this before StartGame!
 
-				SendNetworkChunkPublisherUpdate();
+				SendNetworkChunkPublisherUpdate();Log.Info("GOINGGGGG "+aaaa++);
+
 			}
 			catch (Exception e)
 			{
