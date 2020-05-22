@@ -62,6 +62,9 @@ namespace MiNET.Worlds
 		public bool NeedSave { get; set; }
 
 		public bool DisableCache { get; set; }
+		public bool SurfaceItemsGenerated { get; set; } = false;
+		public bool Generated { get; set; } = false;
+
 		private McpeWrapper _cachedBatch;
 		private object _cacheSync = new object();
 

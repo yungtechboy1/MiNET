@@ -151,6 +151,7 @@ namespace MiNET.Worlds
 
 			int index = _blocks[GetIndex(bx, by, bz)];
 			int runtimeId = _runtimeIds[index];
+			if (runtimeId < 0) runtimeId = 0;
 			var blockState = BlockFactory.BlockPalette[runtimeId];
 			var block = BlockFactory.GetBlockById(blockState.Id);
 			block.SetState(blockState.States);

@@ -70,7 +70,7 @@ namespace MiNET.Worlds
 
 		public ConcurrentDictionary<ChunkCoordinates, ChunkColumn> _chunkCache = new ConcurrentDictionary<ChunkCoordinates, ChunkColumn>();
 
-		public string BasePath { get; private set; }
+		public string BasePath { get; set; }
 
 		public Dimension Dimension { get; set; }
 
@@ -610,7 +610,7 @@ namespace MiNET.Worlds
 			}
 		}
 
-		private void ReadSection(NbtTag sectionTag, ChunkColumn chunkColumn, bool convertBid = true)
+		public void ReadSection(NbtTag sectionTag, ChunkColumn chunkColumn, bool convertBid = true)
 		{
 			int sectionIndex = sectionTag["Y"].ByteValue;
 			byte[] blocks = sectionTag["Blocks"].ByteArrayValue;
@@ -702,7 +702,7 @@ namespace MiNET.Worlds
 
 		private static Regex _regex = new Regex(@"^((\{""extra"":\[)?)(\{""text"":"".*?""})(],)?(""text"":"".*?""})?$");
 
-		private static void CleanSignText(NbtCompound blockEntityTag, string tagName)
+		public static void CleanSignText(NbtCompound blockEntityTag, string tagName)
 		{
 			var text = blockEntityTag[tagName].StringValue;
 			var replace = /*Regex.Unescape*/(_regex.Replace(text, "$3"));
@@ -777,8 +777,7 @@ namespace MiNET.Worlds
 
 		public int SaveChunks()
 		{
-			if (!Config.GetProperty("Save.Enabled", false)) return 0;
-
+			
 			int count = 0;
 			try
 			{

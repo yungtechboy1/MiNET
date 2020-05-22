@@ -68,6 +68,7 @@ namespace MiNET.Blocks
 				var bbox = GetBoundingBox();
 				var d = (bbox.Max - bbox.Min) / 2;
 
+				level.ApplyPhysics(Coordinates.X,Coordinates.Y+1,Coordinates.Z);
 				new FallingBlock(level, this) {KnownPosition = new PlayerLocation(Coordinates.X + d.X, Coordinates.Y - 0.03f, Coordinates.Z + d.Z)}.SpawnEntity();
 			}
 		}

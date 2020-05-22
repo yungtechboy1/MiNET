@@ -1135,8 +1135,8 @@ namespace MiNET.Worlds
 				StackTrace stackTrace = new StackTrace();
 
 // Get calling method name
-				Console.WriteLine("CALLED FROM >>>>"+stackTrace.GetFrame(1).GetMethod().Name);
-				Log.Error($"Got <null> chunk at {chunkCoordinates} BOOL {cacheOnly}");
+				//Console.WriteLine("CALLED FROM >>>>"+stackTrace.GetFrame(1).GetMethod().Name);
+				if(!cacheOnly)Log.Error($"Got <null> chunk at {chunkCoordinates} BOOL {cacheOnly}");
 				// MiNetServer.FastThreadPool.QueueUserWorkItem(() =>
 				// {
 				// 	WorldProvider.GenerateChunkColumn(chunkCoordinates);
@@ -1144,19 +1144,25 @@ namespace MiNET.Worlds
 			}
 			return chunk;
 		}
-
-		public void SetBlock(Block block, bool broadcast = true, bool applyPhysics = true, bool calculateLight = true, ChunkColumn possibleChunk = null)
+		public void SetBlockFromCache(Block block, bool broadcast = true, bool applyPhysics = true, bool calculateLight = true, ChunkColumn possibleChunk = null)
 		{
 			if (block.Coordinates.Y < 0) return;
 
 			ChunkColumn chunk;
 			var chunkCoordinates = new ChunkCoordinates(block.Coordinates.X >> 4, block.Coordinates.Z >> 4);
-			chunk = possibleChunk != null && possibleChunk.X == chunkCoordinates.X && possibleChunk.Z == chunkCoordinates.Z ? possibleChunk : GetChunk(chunkCoordinates);
+			// Console.WriteLine($"CHSetBlockFromCache >>>>>  AT {chunkCoordinates.X} {chunkCoordinates.Z} STARTING TO GET CHUNK");
+			chunk = possibleChunk != null && possibleChunk.X == chunkCoordinates.X && possibleChunk.Z == chunkCoordinates.Z ? possibleChunk : GetChunk(chunkCoordinates,true);
 
 
-			if (!OnBlockPlace(new BlockPlaceEventArgs(null, this, block, null)))
+			if (chunk == null || !OnBlockPlace(new BlockPlaceEventArgs(null, this, block, null)))
 			{
+				// Console.WriteLine($"CHUNK AT {chunkCoordinates.X} {chunkCoordinates.Z} WAS NULL");
 				return;
+			}
+			else
+			{
+				// Console.WriteLine($"CHSetBlockFromCache >>>>>  AT {chunkCoordinates.X} {chunkCoordinates.Z} NOT NULL CHUNK");
+
 			}
 
 			chunk.SetBlock(block.Coordinates.X & 0x0f, block.Coordinates.Y & 0xff, block.Coordinates.Z & 0x0f, block);
@@ -1186,6 +1192,49 @@ namespace MiNET.Worlds
 				RelayBroadcast(message);
 			}
 
+			block.BlockAdded(this);
+		}
+		public void SetBlock(Block block, bool broadcast = true, bool applyPhysics = true, bool calculateLight = true, ChunkColumn possibleChunk = null)
+		{
+			if (block.Coordinates.Y < 0) return;
+		
+			ChunkColumn chunk;
+			var chunkCoordinates = new ChunkCoordinates(block.Coordinates.X >> 4, block.Coordinates.Z >> 4);
+			chunk = possibleChunk != null && possibleChunk.X == chunkCoordinates.X && possibleChunk.Z == chunkCoordinates.Z ? possibleChunk : GetChunk(chunkCoordinates);
+		
+		
+			if (!OnBlockPlace(new BlockPlaceEventArgs(null, this, block, null)))
+			{
+				return;
+			}
+		
+			chunk.SetBlock(block.Coordinates.X & 0x0f, block.Coordinates.Y & 0xff, block.Coordinates.Z & 0x0f, block);
+			if (calculateLight && chunk.GetHeight(block.Coordinates.X & 0x0f, block.Coordinates.Z & 0x0f) <= block.Coordinates.Y + 1)
+			{
+				chunk.RecalcHeight(block.Coordinates.X & 0x0f, block.Coordinates.Z & 0x0f, Math.Min(255, block.Coordinates.Y + 1));
+			}
+		
+			if (applyPhysics) ApplyPhysics(block.Coordinates.X, block.Coordinates.Y, block.Coordinates.Z);
+		
+			// We should not ignore creative. Need to investigate.
+			if (GameMode != GameMode.Creative && calculateLight /* && block.LightLevel > 0*/)
+			{
+				if (Dimension == Dimension.Overworld) new SkyLightCalculations().Calculate(this, block.Coordinates);
+		
+				block.BlockLight = (byte) block.LightLevel;
+				chunk.SetBlocklight(block.Coordinates.X & 0x0f, block.Coordinates.Y & 0xff, block.Coordinates.Z & 0x0f, (byte) block.LightLevel);
+				BlockLightCalculations.Calculate(this, block.Coordinates);
+			}
+		
+			if (broadcast)
+			{
+				var message = McpeUpdateBlock.CreateObject();
+				message.blockRuntimeId = (uint) block.GetRuntimeId();
+				message.coordinates = block.Coordinates;
+				message.blockPriority = 0xb;
+				RelayBroadcast(message);
+			}
+		
 			block.BlockAdded(this);
 		}
 

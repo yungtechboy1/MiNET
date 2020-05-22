@@ -137,22 +137,24 @@ namespace MiNET.Entities.World
 			}
 			else
 			{
+
+				DespawnEntity();
 				var updateBlock = McpeUpdateBlockSynced.CreateObject();
+				// var updateBlock = McpeUpdateBlockSynced.CreateObject();
 				updateBlock.coordinates = new BlockCoordinates(KnownPosition);
 				updateBlock.blockRuntimeId = (uint) _original.GetRuntimeId();
 				updateBlock.blockPriority = 3;
 				updateBlock.dataLayerId = 0;
 				updateBlock.unknown0 = EntityId;
 				updateBlock.unknown1 = 2;
-
-				Level.RelayBroadcast(updateBlock);
-
-				DespawnEntity();
+				
+				_original.Coordinates = new BlockCoordinates(KnownPosition);
+				Level.SetBlock(_original);
 
 				//var block = BlockFactory.GetBlockById(_original.Id);
 				//block.Metadata = _original.Metadata;
 				//block.Coordinates = new BlockCoordinates(KnownPosition);
-				Level.SetBlock(_original, false);
+				// Level.SetBlock(_original, false);
 			}
 		}
 
