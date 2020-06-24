@@ -1266,6 +1266,7 @@ namespace MiNET.Worlds
 
 		public void SetBlockEntity(BlockEntity blockEntity, bool broadcast = true)
 		{
+			Log.Info("SETTING BLOCK ENTITY AT"+blockEntity.Coordinates+" AND "+broadcast +" ||| "+blockEntity.UpdatesOnTick);
 			ChunkColumn chunk = GetChunk(new ChunkCoordinates(blockEntity.Coordinates.X >> 4, blockEntity.Coordinates.Z >> 4));
 			chunk.SetBlockEntity(blockEntity.Coordinates, blockEntity.GetCompound());
 

@@ -35,6 +35,7 @@ namespace MiNET.BlockEntities
 
 		public ChestBlockEntity() : base("Chest")
 		{
+			UpdatesOnTick = true;
 			Compound = new NbtCompound(string.Empty)
 			{
 				new NbtString("id", Id),

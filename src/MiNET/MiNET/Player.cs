@@ -2095,10 +2095,10 @@ namespace MiNET
 				SendPacket(sendSlot);
 			}
 
-			//if(inventory.BlockEntity != null)
-			//{
-			//	Level.SetBlockEntity(inventory.BlockEntity, false);
-			//}
+			if(inventory.BlockEntity != null)
+			{
+				Level.SetBlockEntity(inventory.BlockEntity, true);
+			}
 		}
 
 
@@ -2113,6 +2113,8 @@ namespace MiNET
 
 		public virtual void HandleMcpeInventoryTransaction(McpeInventoryTransaction message)
 		{
+			
+			Console.Write("TRANSACTION EVENT TRANSACTING CALLED !!!!!");
 			switch (message.transaction)
 			{
 				case InventoryMismatchTransaction inventoryMismatchTransaction:
@@ -2322,6 +2324,8 @@ namespace MiNET
 
 		protected virtual void HandleTransactionRecords(List<TransactionRecord> transactionRecords)
 		{
+			
+			Console.Write("TRANSACTION EVENT STARTED");
 			Item inTransferItem = null;
 			Item switchedItem = null;
 			ItemEntity droppedItem = null;
@@ -2436,6 +2440,7 @@ namespace MiNET
 							}
 							default:
 							{
+								Console.Write("TRANSACTION EVENT CORRECT");
 								//TODO Handle custom items, like player inventory and cursor
 
 								if (_openInventory != null)

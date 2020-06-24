@@ -142,6 +142,7 @@ namespace MiNET.Worlds
 			int runtimeId = _runtimeIds[paletteIndex];
 			if(runtimeId < 0 || runtimeId >= BlockFactory.BlockPalette.Count) Log.Warn($"Couldn't locate runtime id {runtimeId} for block");
 			int bid = BlockFactory.BlockPalette[runtimeId].Id;
+			if(bid == 211)Log.Info($"AAAAAAAAAA >>>>> {paletteIndex} {runtimeId} {bid}");
 			return bid == -1 ? 0 : bid;
 		}
 

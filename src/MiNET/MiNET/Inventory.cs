@@ -137,6 +137,8 @@ namespace MiNET
 					new NbtShort("id", slot.Id),
 					new NbtShort("Damage", slot.Metadata),
 				});
+				
+				if(slot.ExtraData != null)slots.Add( new NbtCompound("Data", slot.ExtraData));
 			}
 
 			return slots;
