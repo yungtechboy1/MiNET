@@ -64,7 +64,7 @@ namespace MiNET
 		private Dictionary<ChunkCoordinates, McpeWrapper> _chunksUsed = new Dictionary<ChunkCoordinates, McpeWrapper>();
 		private ChunkCoordinates _currentChunkPosition;
 
-		private IInventory _openInventory;
+		public IInventory _openInventory { get; set; }
 		public PlayerInventory Inventory { get; set; }
 
 		public PlayerLocation SpawnPosition { get; set; }
